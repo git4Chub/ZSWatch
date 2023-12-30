@@ -17,7 +17,7 @@
 
 #include <zsw_cpu_freq.h>
 #include <zephyr/kernel.h>
-#ifndef CONFIG_BOARD_NATIVE_POSIX
+#if !defined(CONFIG_BOARD_NATIVE_POSIX) && !defined(CONFIG_BOARD_M5STACK_CORE2)
 #include <nrfx_clock.h>
 
 //#define CPU_CLOCK_PROFILING

@@ -1,0 +1,49 @@
+diff --git a/kernel/work.c b/kernel/work.c
+index 402b2f8051..441227eb99 100644
+--- a/kernel/work.c
++++ b/kernel/work.c
+@@ -664,8 +664,9 @@ static void work_queue_main(void *workq_ptr, void *p2, void *p3)
+ 
+ 		k_spin_unlock(&lock, key);
+ 
+-		__ASSERT_NO_MSG(handler != NULL);
+-		handler(work);
++		//__ASSERT_NO_MSG(handler != NULL);
++		if (handler)
++		    handler(work);
+ 
+ 		/* Mark the work item as no longer running and deal
+ 		 * with any cancellation issued while it was running.
+diff --git a/modules/lvgl/input/lvgl_pointer_input.c b/modules/lvgl/input/lvgl_pointer_input.c
+index 19c71eb197..b059f19a1e 100644
+--- a/modules/lvgl/input/lvgl_pointer_input.c
++++ b/modules/lvgl/input/lvgl_pointer_input.c
+@@ -32,10 +32,11 @@ static void lvgl_pointer_process_event(const struct device *dev, struct input_ev
+ 
+ 	switch (evt->code) {
+ 	case INPUT_ABS_X:
+-		point->x = evt->value;
++		/* workaround: switch x/y since current ft5336 dirver upload x/y is reversed */
++		point->y = evt->value;
+ 		break;
+ 	case INPUT_ABS_Y:
+-		point->y = evt->value;
++		point->x = evt->value;
+ 		break;
+ 	case INPUT_BTN_TOUCH:
+ 		data->pending_event.state = evt->value ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+diff --git a/subsys/fs/nvs/nvs.c b/subsys/fs/nvs/nvs.c
+index 8c4575700a..fc0eb670aa 100644
+--- a/subsys/fs/nvs/nvs.c
++++ b/subsys/fs/nvs/nvs.c
+@@ -738,8 +738,10 @@ static int nvs_startup(struct nvs_fs *fs)
+ 	}
+ 	/* all sectors are closed, this is not a nvs fs */
+ 	if (closed_sectors == fs->sector_count) {
++#if 0 //workaround case that the initial partition in erased  status cannot go on
+ 		rc = -EDEADLK;
+ 		goto end;
++#endif
+ 	}
+ 
+ 	if (i == fs->sector_count) {

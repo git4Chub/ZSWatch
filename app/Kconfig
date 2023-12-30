@@ -160,13 +160,19 @@ menu "ZSWatch"
         default n
         help
             "Disable encryption for BLE connection (pairing/bonding). Used only for debugging purposes."
-    endmenu
+   		config BLE_SUPPORT_AOA
+			bool
+		prompt "support aoa feature"
+		default n
+		help
+			"Disable if not support"
+	 endmenu
     
     menu "SPI RTT Flash Loader"
         config SPI_FLASH_LOADER
             bool
         prompt "Enable SPI flash loader"
-        default y
+        default n
         select USE_SEGGER_RTT
         #select SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL
         help

@@ -6,7 +6,7 @@
 #include <string.h>
 #include <zephyr/kernel.h>
 #include "ram_retention_storage.h"
-#ifndef CONFIG_BOARD_NATIVE_POSIX
+#if !defined(CONFIG_BOARD_NATIVE_POSIX) && !defined(CONFIG_BOARD_M5STACK_CORE2)
 #include <zephyr/devicetree.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/crc.h>

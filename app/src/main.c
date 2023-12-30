@@ -90,7 +90,7 @@ static void on_ble_data_callback(ble_comm_cb_data_t *cb);
 static void on_zbus_ble_data_callback(const struct zbus_channel *chan);
 static void on_input_subsys_callback(struct input_event *evt);
 static void on_watchface_app_event_callback(watchface_app_evt_t evt);
-#ifdef CONFIG_BOARD_NATIVE_POSIX
+#if defined(CONFIG_BOARD_NATIVE_POSIX) || defined(CONFIG_BOARD_M5STACK_CORE2)
 static void on_lvgl_screen_gesture_event_callback(lv_event_t *e);
 #endif
 
@@ -239,7 +239,7 @@ static void run_init_work(struct k_work *item)
 
     watch_state = WATCHFACE_STATE;
 
-#ifdef CONFIG_BOARD_NATIVE_POSIX
+#if defined(CONFIG_BOARD_NATIVE_POSIX) || defined(CONFIG_BOARD_M5STACK_CORE2)
     lv_obj_add_event_cb(lv_scr_act(), on_lvgl_screen_gesture_event_callback, LV_EVENT_GESTURE, NULL);
 #endif
 
@@ -288,7 +288,7 @@ static void enable_bluetoth(void)
 {
     int err;
 
-#ifdef CONFIG_BOARD_NATIVE_POSIX
+#if defined(CONFIG_BOARD_NATIVE_POSIX) || defined(CONFIG_BOARD_M5STACK_CORE2)
     bt_addr_le_t addr;
 
     err = bt_addr_le_from_str("DE:AD:BE:EF:BA:11", "random", &addr);
@@ -446,14 +446,14 @@ static void handle_screen_gesture(lv_dir_t event_code)
     } else if (zsw_notification_popup_is_shown()) {
         zsw_notification_popup_remove();
     } else if (watch_state == APPLICATION_MANAGER_STATE && event_code == LV_DIR_RIGHT) {
-#ifdef CONFIG_BOARD_NATIVE_POSIX
+#if defined(CONFIG_BOARD_NATIVE_POSIX) || defined(CONFIG_BOARD_M5STACK_CORE2)
         // Until there is a better way to go back without access to buttons.
         zsw_app_manager_exit_app();
 #endif
     }
 }
 
-#ifdef CONFIG_BOARD_NATIVE_POSIX
+#if defined(CONFIG_BOARD_NATIVE_POSIX) || defined(CONFIG_BOARD_M5STACK_CORE2)
 static void on_lvgl_screen_gesture_event_callback(lv_event_t *e)
 {
     lv_dir_t  dir;

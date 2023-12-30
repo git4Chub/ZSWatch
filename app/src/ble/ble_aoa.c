@@ -20,6 +20,7 @@
 
 #include "ble_aoa.h"
 
+#if defined(CONFIG_BLE_SUPPORT_AOA)
 // Length of CTE in unit of 8 [us]
 #define CTE_LEN (0x14U)
 // Number of CTE send in single periodic advertising train
@@ -128,3 +129,14 @@ bool bleAoaAdvertise(uint16_t min, uint16_t max, bool on)
     }
     return ok;
 }
+#else
+bool bleAoaInit()
+{
+    return true;
+}
+
+bool bleAoaAdvertise(uint16_t min, uint16_t max, bool on)
+{
+    return true;
+}
+#endif

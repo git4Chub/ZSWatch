@@ -36,10 +36,17 @@ typedef enum display_state {
     DISPLAY_STATE_POWERED_OFF,
 } display_state_t;
 
+#if defined(CONFIG_BOARD_M5STACK_CORE2)
+static const struct pwm_dt_spec display_blk = PWM_DT_SPEC_GET_OR(DT_ALIAS(display_blk), {});
+static const struct device *const reg_dev = DEVICE_DT_GET_OR_NULL(DT_PATH(axp192_regulator));
+static const struct device *display_dev = DEVICE_DT_GET_OR_NULL(DT_CHOSEN(zephyr_display));
+static const struct device *touch_dev =  DEVICE_DT_GET_OR_NULL(DT_NODELABEL(ft5336_touch));
+#else
 static const struct pwm_dt_spec display_blk = PWM_DT_SPEC_GET_OR(DT_ALIAS(display_blk), {});
 static const struct device *const reg_dev = DEVICE_DT_GET_OR_NULL(DT_PATH(regulator_3v3_ctrl));
 static const struct device *display_dev = DEVICE_DT_GET_OR_NULL(DT_CHOSEN(zephyr_display));
 static const struct device *touch_dev =  DEVICE_DT_GET_OR_NULL(DT_NODELABEL(cst816s));
+#endif
 
 K_WORK_DELAYABLE_DEFINE(lvgl_work, lvgl_render);
 
